@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'jayen/number-converter',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'f8cb4a6842ade15948efc4f8106ecb2e0894f784',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -74,9 +74,9 @@
             'dev_requirement' => false,
         ),
         'jayen/number-converter' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'f8cb4a6842ade15948efc4f8106ecb2e0894f784',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
