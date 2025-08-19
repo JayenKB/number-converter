@@ -11,38 +11,24 @@ For example:
 
 ## 📦 Installation
 
-This package is not published on Packagist yet.  
-You can install it directly from **GitHub**.
+This package is published on Packagist. You can install it using Composer.
 
-### 1. Add the repository to `composer.json`
-
-Open your Laravel project’s `composer.json` and add the following to the `repositories` array:
-
-```json
-"repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/JayenKB/number-converter.git"
-    }
-]
-```
-
-### 2. Require the package
+### 1. Require the package
 
 Run:
 
 ```bash
-composer require jayen/number-converter:^1.0
+composer require jayen/number-converter
 ```
 
-### 3. Usage
+### 2. Usage
 
 **Using the Facade:**
 
 ```php
 use Jayen\NumberConverter\Facades\NumberConverter;
 
-$number = NumberConverter::toNumber("One Thousand Two Hundred Thirty Four");
+$number = NumberConverter::wordsToNumber("One Thousand Two Hundred Thirty Four");
 // Output: 1234
 ```
 
@@ -53,7 +39,7 @@ use Jayen\NumberConverter\NumberConverter;
 
 public function convert(NumberConverter $converter)
 {
-    return $converter->toNumber("Five Million Six Hundred");
+    return $converter->wordsToNumber("Five Million Six Hundred");
     // Output: 5600000
 }
 ```
