@@ -1,32 +1,29 @@
 # Number Converter for Laravel
 
-A Laravel package to convert **numbers written in words** into **numeric values**.
+A Laravel package to convert **numbers written in words** into **numeric values**, and vice versa.
 
-For example:
+## ✨ Features
 
-- `"two hundred million"` → `200000000`
-- `"Three Hundred Thousand"` → `300000`
-
-- `200000000` → `"two hundred million"`
-- `300000` → `"Three Hundred Thousand"`
+- Convert `"two hundred million"` → `200000000`
+- Convert `"Three Hundred Thousand"` → `300000`
+- Convert `200000000` → `"two hundred million"`
+- Convert `300000` → `"Three Hundred Thousand"`
 
 ---
 
 ## 📦 Installation
 
-This package is published on Packagist. You can install it using Composer.
-
-### 1. Require the package
-
-Run:
+Install via [Packagist](https://packagist.org/packages/jayen/number-converter) using Composer:
 
 ```bash
 composer require jayen/number-converter
 ```
 
-### 2. Usage
+---
 
-**Using the Facade:**
+## 🚀 Usage
+
+### Using the Facade
 
 ```php
 use Jayen\NumberConverter\Facades\NumberConverter;
@@ -34,21 +31,21 @@ use Jayen\NumberConverter\Facades\NumberConverter;
 $number = NumberConverter::wordsToNumber("One Thousand Two Hundred Thirty Four");
 // Output: 1234
 
-$number = NumberConverter::numberToWords("1234");
+$words = NumberConverter::numberToWords("1234");
 // Output: one thousand, two hundred and thirty-four
 ```
 
-**Using dependency injection:**
+### Using Dependency Injection
 
 ```php
 use Jayen\NumberConverter\NumberConverter;
 
 public function convert(NumberConverter $converter)
 {
-    $wordsToNumber = $converter->wordsToNumber("Five Million Six Hundred");
+    $number = $converter->wordsToNumber("Five Million Six Hundred");
     // Output: 5600000
 
-    $wordsToNumber = $converter->numberToWords("5600000");
+    $words = $converter->numberToWords("5600000");
     // Output: Five Million Six Hundred
 }
 ```
@@ -59,6 +56,8 @@ public function convert(NumberConverter $converter)
 
 **Jayen Bambhroliya**  
 📧 jayenbambharoliya@gmail.com
+
+---
 
 ## 📜 License
 
