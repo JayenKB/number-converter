@@ -7,6 +7,9 @@ For example:
 - `"two hundred million"` → `200000000`
 - `"Three Hundred Thousand"` → `300000`
 
+- `200000000` → `"two hundred million"`
+- `300000` → `"Three Hundred Thousand"`
+
 ---
 
 ## 📦 Installation
@@ -30,6 +33,9 @@ use Jayen\NumberConverter\Facades\NumberConverter;
 
 $number = NumberConverter::wordsToNumber("One Thousand Two Hundred Thirty Four");
 // Output: 1234
+
+$number = NumberConverter::numberToWords("1234");
+// Output: one thousand, two hundred and thirty-four
 ```
 
 **Using dependency injection:**
@@ -39,8 +45,11 @@ use Jayen\NumberConverter\NumberConverter;
 
 public function convert(NumberConverter $converter)
 {
-    return $converter->wordsToNumber("Five Million Six Hundred");
+    $wordsToNumber = $converter->wordsToNumber("Five Million Six Hundred");
     // Output: 5600000
+
+    $wordsToNumber = $converter->numberToWords("5600000");
+    // Output: Five Million Six Hundred
 }
 ```
 
