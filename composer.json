@@ -3,6 +3,7 @@
     "description": "Laravel package to convert numbers written in words into integers.",
     "type": "library",
     "license": "MIT",
+    "homepage": "https://github.com/jayenbambharoliya/number-converter",
     "autoload": {
         "psr-4": {
             "Jayen\\NumberConverter\\": "src/"
@@ -11,7 +12,8 @@
     "authors": [
         {
             "name": "Jayen Patel",
-            "email": "jayenbambharoliya@gmail.com"
+            "email": "jayenbambharoliya@gmail.com",
+            "role": "Developer"
         }
     ],
     "extra": {
