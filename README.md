@@ -52,13 +52,6 @@ public function convert(NumberConverter $converter)
 
 ---
 
-## 👨‍💻 Author
-
-**Jayen Bambhroliya**  
-📧 jayenbambharoliya@gmail.com
-
----
-
 ## 📜 License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE).
