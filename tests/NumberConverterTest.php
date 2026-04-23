@@ -23,6 +23,20 @@ it('throws exception for non-numeric input', function () {
     NumberConverter::numberToWords('foo');
 });
 
+it('formats numbers by currency code', function () {
+    expect(NumberConverter::formatCurrency(1234567.89, 'INR'))->toBe('₹12,34,567.89');
+    expect(NumberConverter::formatCurrency(1234567.89, 'USD'))->toBe('$1,234,567.89');
+    expect(NumberConverter::formatCurrency(1234567.89, 'EUR'))->toBe('€1,234,567.89');
+    expect(NumberConverter::formatCurrency(1234567.89, 'JPY'))->toBe('¥1,234,568');
+    expect(NumberConverter::formatCurrency(1234567.89, 'AED', false))->toBe('AED 1,234,567.89');
+});
+
+it('converts amounts to currency words by currency code', function () {
+    expect(NumberConverter::numberToCurrencyWords(12345678.89, 'INR'))->toBe('one crore, twenty-three lakh, forty-five thousand, six hundred and seventy-eight rupees and eighty-nine paise');
+    expect(NumberConverter::numberToCurrencyWords(1234567.89, 'USD'))->toBe('one million, two hundred and thirty-four thousand, five hundred and sixty-seven dollars and eighty-nine cents');
+    expect(NumberConverter::numberToCurrencyWords(1234567.89, 'JPY'))->toBe('one million, two hundred and thirty-four thousand, five hundred and sixty-eight yen');
+});
+
 it('converts words to numbers', function () {
     $converter = new NumberConverter();
     expect($converter->wordsToNumber('zero'))->toBe(0);
@@ -33,4 +47,7 @@ it('converts words to numbers', function () {
     expect($converter->wordsToNumber('five hundred and sixty-nine'))->toBe(569);
     expect($converter->wordsToNumber('one thousand'))->toBe(1000);
     expect($converter->wordsToNumber('one thousand two hundred and thirty-four'))->toBe(1234);
+    expect($converter->wordsToNumber('one lakh'))->toBe(100000);
+    expect($converter->wordsToNumber('twelve lakh thirty-four thousand five hundred and sixty-seven'))->toBe(1234567);
+    expect($converter->wordsToNumber('one crore twenty-three lakh forty-five thousand six hundred and seventy-eight'))->toBe(12345678);
 });

@@ -4,6 +4,18 @@ namespace Jayen\NumberConverter;
 
 class NumberConverter
 {
+    private const CURRENCIES = [
+        'INR' => ['symbol' => '₹', 'decimals' => 2, 'format' => 'indian', 'major' => ['rupee', 'rupees'], 'minor' => ['paise', 'paise']],
+        'USD' => ['symbol' => '$', 'decimals' => 2, 'format' => 'international', 'major' => ['dollar', 'dollars'], 'minor' => ['cent', 'cents']],
+        'EUR' => ['symbol' => '€', 'decimals' => 2, 'format' => 'international', 'major' => ['euro', 'euros'], 'minor' => ['cent', 'cents']],
+        'GBP' => ['symbol' => '£', 'decimals' => 2, 'format' => 'international', 'major' => ['pound', 'pounds'], 'minor' => ['penny', 'pence']],
+        'JPY' => ['symbol' => '¥', 'decimals' => 0, 'format' => 'international', 'major' => ['yen', 'yen'], 'minor' => ['', '']],
+        'AUD' => ['symbol' => 'A$', 'decimals' => 2, 'format' => 'international', 'major' => ['dollar', 'dollars'], 'minor' => ['cent', 'cents']],
+        'CAD' => ['symbol' => 'C$', 'decimals' => 2, 'format' => 'international', 'major' => ['dollar', 'dollars'], 'minor' => ['cent', 'cents']],
+        'CNY' => ['symbol' => '¥', 'decimals' => 2, 'format' => 'international', 'major' => ['yuan', 'yuan'], 'minor' => ['fen', 'fen']],
+        'AED' => ['symbol' => 'د.إ ', 'decimals' => 2, 'format' => 'international', 'major' => ['dirham', 'dirhams'], 'minor' => ['fil', 'fils']],
+    ];
+
     public function wordsToNumber(string $words): int
     {
         $words = strtolower(trim($words));
@@ -23,6 +35,10 @@ class NumberConverter
         $scales = [
             'hundred'=>100,
             'thousand'=>1000,
+            'lakh'=>100000,
+            'lakhs'=>100000,
+            'crore'=>10000000,
+            'crores'=>10000000,
             'million'=>1000000,
             'billion'=>1000000000,
         ];
@@ -45,6 +61,129 @@ class NumberConverter
         }
 
         return $result + $current;
+    }
+
+    public static function formatCurrency($number, string $currencyCode = 'INR', bool $withSymbol = true, ?int $decimals = null): string
+    {
+        if (!is_numeric($number)) {
+            throw new \InvalidArgumentException("Input must be a number");
+        }
+
+        $currencyCode = strtoupper(trim($currencyCode));
+
+        if (!isset(self::CURRENCIES[$currencyCode])) {
+            throw new \InvalidArgumentException("Unsupported currency code: {$currencyCode}");
+        }
+
+        $currency = self::CURRENCIES[$currencyCode];
+        $decimals ??= $currency['decimals'];
+
+        if ($decimals < 0) {
+            throw new \InvalidArgumentException("Decimals must be zero or greater");
+        }
+
+        $negative = $number < 0 ? '-' : '';
+        $amount = number_format(abs((float) $number), $decimals, '.', '');
+        [$integer, $fraction] = array_pad(explode('.', $amount, 2), 2, '');
+        $formatted = $currency['format'] === 'indian'
+            ? self::formatIndianNumber($integer)
+            : number_format((int) $integer, 0, '.', ',');
+
+        if ($decimals > 0) {
+            $formatted .= '.' . $fraction;
+        }
+
+        return $negative . ($withSymbol ? $currency['symbol'] : $currencyCode . ' ') . $formatted;
+    }
+
+    public static function numberToCurrencyWords($number, string $currencyCode = 'INR', bool $includeMinorUnit = true): string
+    {
+        if (!is_numeric($number)) {
+            throw new \InvalidArgumentException("Input must be a number");
+        }
+
+        $currencyCode = strtoupper(trim($currencyCode));
+
+        if (!isset(self::CURRENCIES[$currencyCode])) {
+            throw new \InvalidArgumentException("Unsupported currency code: {$currencyCode}");
+        }
+
+        $currency = self::CURRENCIES[$currencyCode];
+        $amount = number_format(abs((float) $number), $currency['decimals'], '.', '');
+        [$majorAmount, $minorAmount] = array_pad(explode('.', $amount, 2), 2, '0');
+
+        $majorAmount = (int) $majorAmount;
+        $minorAmount = (int) $minorAmount;
+        $words = self::numberWordsByFormat($majorAmount, $currency['format']) . ' ' . self::currencyUnit($majorAmount, $currency['major']);
+
+        if ($includeMinorUnit && $currency['decimals'] > 0 && $minorAmount > 0) {
+            $words .= ' and ' . self::numberToWords($minorAmount) . ' ' . self::currencyUnit($minorAmount, $currency['minor']);
+        }
+
+        return $number < 0 ? 'negative ' . $words : $words;
+    }
+
+    private static function currencyUnit(int $amount, array $units): string
+    {
+        return $amount === 1 ? $units[0] : $units[1];
+    }
+
+    private static function numberWordsByFormat(int $number, string $format): string
+    {
+        return $format === 'indian'
+            ? self::numberToIndianWords($number)
+            : self::numberToWords($number);
+    }
+
+    private static function formatIndianNumber(string $integer): string
+    {
+        $lastThree = substr($integer, -3);
+        $leading = substr($integer, 0, -3);
+
+        if ($leading === '') {
+            return $lastThree;
+        }
+
+        return preg_replace('/\B(?=(\d{2})+(?!\d))/', ',', $leading) . ',' . $lastThree;
+    }
+
+    private static function numberToIndianWords($number): string
+    {
+        if (!is_numeric($number)) {
+            throw new \InvalidArgumentException("Input must be a number");
+        }
+
+        $number = (int) $number;
+
+        if ($number < 0) {
+            return 'negative ' . self::numberToIndianWords(abs($number));
+        }
+
+        if ($number < 100000) {
+            return self::numberToWords($number);
+        }
+
+        $scales = [
+            10000000 => 'crore',
+            100000 => 'lakh',
+            1000 => 'thousand',
+        ];
+
+        foreach ($scales as $scale => $scaleName) {
+            if ($number >= $scale) {
+                $baseUnits = intdiv($number, $scale);
+                $remainder = $number % $scale;
+                $words = self::numberToIndianWords($baseUnits) . ' ' . $scaleName;
+
+                if ($remainder === 0) {
+                    return $words;
+                }
+
+                return $words . ', ' . self::numberToIndianWords($remainder);
+            }
+        }
+
+        return self::numberToWords($number);
     }
 
     public static function numberToWords($number)
