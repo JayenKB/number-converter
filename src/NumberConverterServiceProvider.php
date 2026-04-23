@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class NumberConverterServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         // Bind helper class to container
         $this->app->singleton('number-converter', function () {
@@ -14,7 +14,7 @@ class NumberConverterServiceProvider extends ServiceProvider
         });
     }
 
-    public function boot()
+    public function boot(): void
     {
         // If needed, you can publish configs here later
     }
