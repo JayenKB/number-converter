@@ -5,9 +5,9 @@ A Laravel package to convert **numbers written in words** into **numeric values*
 ## ✨ Features
 
 - Convert `"two hundred million"` → `200000000`
-- Convert `"Three Hundred Thousand"` → `300000`
+- Convert `"three hundred thousand"` → `300000`
 - Convert `200000000` → `"two hundred million"`
-- Convert `300000` → `"Three Hundred Thousand"`
+- Convert `300000` → `"three hundred thousand"`
 - Format `1234567.89` → `₹12,34,567.89`
 - Format `1234567.89` with currency code `"USD"` → `$1,234,567.89`
 - Convert `12345678.89` with currency code `"INR"` → `"one crore, twenty-three lakh, forty-five thousand, six hundred and seventy-eight rupees and eighty-nine paise"`
@@ -57,13 +57,13 @@ use Jayen\NumberConverter\NumberConverter;
 
 public function convert(NumberConverter $converter)
 {
-    $number = $converter->wordsToNumber("Five Million Six Hundred");
+    $number = $converter->wordsToNumber("Five Million Six Hundred Thousand");
     // Output: 5600000
 
     $words = $converter->numberToWords("5600000");
-    // Output: Five Million Six Hundred
+    // Output: five million, six hundred thousand
 
-    $number = $converter->wordsToNumber("Twelve Lakh Thirty Four Thousand Five Hundred Sixty Seven");
+    $number = $converter->wordsToNumber("twelve lakh thirty-four thousand five hundred sixty-seven");
     // Output: 1234567
 
     $amount = $converter->formatCurrency(1234567.89, 'INR');
